@@ -126,47 +126,49 @@ class Game
     # Create a party with those heroes in it and return it
     end
     puts "The Game has begun!"
+    puts "Your heroes are: "
+    @chosen_heroes.each {|hero| puts hero.name.green}
     path
   end
 
   def path
     puts "\nEnter 1 to go to The Forest or 2 to go to The Shop"
     destination = gets.chomp.to_i
-    if destination == 1
-      enter_forest
-    else
-      enter_shop
-    end
+    enter_forest if destination == 1
+    enter_shop if destination == 2
   end
 
   def enter_forest
-    puts "You've encountered a group of Monsters who would like to do battle."
-    puts "Which hero would you like fight?"
-    @chosen_heroes.each_with_index {|val, index| puts "#{val.name} press #{index}"}
-    @fighter = @chosen_heroes[gets.chomp.to_i]
-    fight
+    if MONSTERS.any?
+      puts "You've encountered a group of Monsters who would like to do battle."
+      puts "Which hero would you like fight?"
+      @chosen_heroes.each_with_index {|val, index| puts "#{val.name}".green + " press #{index}"}
+      @fighter = @chosen_heroes[gets.chomp.to_i]
+      fight
+    else
+      puts "There are currently no more monsters in these woods, please come back later"
+      path
+    end
   end
 
   def enter_shop
     puts "Hello shop"
   end
 
-def fight
-  monster_fighter = MONSTERS.shuffle.pop
-  current_fighters = [@fighter, monster_fighter]
-  attacker = current_fighters.shift
-  attackee = current_fighters.shift
-  while attackee.is_alive?
-    attacker.attack(attackee)
-
-    puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
-
-    attacker, attackee = attackee, attacker unless attackee.is_dead?
+  def fight
+    monster_fighter = MONSTERS.pop
+    current_fighters = [@fighter, monster_fighter]
+    attacker = current_fighters.shift
+    attackee = current_fighters.shift
+    while attackee.is_alive?
+      attacker.attack(attackee)
+      puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
+      attacker, attackee = attackee, attacker unless attackee.is_dead?
+    end
+    puts "#{attackee} is now dead..."
+    enter_forest if MONSTERS.any?
+    path if MONSTERS.none?
   end
-
-  puts "#{attackee} is now dead..."
-
-end
 end
 
 Game.new
