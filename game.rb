@@ -9,7 +9,7 @@ class Game
 
   HEROS = [
   lancelot = Hero.new({
-    name: "lancelot",
+    name: "Lancelot",
     hp: 20,
     weapon: Weapon.new({
       name: "longbow",
@@ -18,10 +18,10 @@ class Game
     })
   }),
   link = Hero.new({
-    name: "link",
+    name: "Link",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "Bow",
       damage: 6,
       price: 25
     })
@@ -30,7 +30,7 @@ class Game
     name: "Luke Skywalker",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "LightSaber",
       damage: 6,
       price: 25
     })
@@ -39,7 +39,7 @@ class Game
     name: "Tony Stark",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "Mark V Suit",
       damage: 6,
       price: 25
     })
@@ -48,7 +48,7 @@ class Game
     name: "Antman",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "Ants",
       damage: 6,
       price: 25
     })
@@ -57,7 +57,7 @@ class Game
     name: "Michael Jordan",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "basketballs",
       damage: 6,
       price: 25
     })
@@ -113,10 +113,10 @@ class Game
 
   def enlist_heroes
     @chosen_heroes = []
-    puts "Which hero would you like to choose? (Choose 3, select one hero at a time, by number)"
+    puts "Which hero would you like to choose? (Choose 3, select one hero at a time, by number)".blue
     # until @@chosen_heroes.length > 1
     2.times do
-    HEROS.each_with_index {|val, index| puts "#{val.name} press #{index}"}
+    HEROS.each_with_index {|val, index| puts "#{val.name} press #{index}".red}
     # Display choices for heroes
     # Prompt (gets) the user for choices e.g. 2, 6
     print "\nChoose Hero #{@chosen_heroes.length + 1}\n > "
@@ -143,7 +143,7 @@ class Game
     puts "You've encountered a group of Monsters who would like to do battle."
     puts "Which hero would you like fight?"
     @chosen_heroes.each_with_index {|val, index| puts "#{val.name} press #{index}"}
-    @fighter = gets.chomp.to_i
+    @fighter = @chosen_heroes[gets.chomp.to_i]
     fight
   end
 
@@ -156,7 +156,6 @@ def fight
   current_fighters = [@fighter, monster_fighter]
   attacker = current_fighters.shift
   attackee = current_fighters.shift
-
   while attackee.is_alive?
     attacker.attack(attackee)
 

@@ -3,7 +3,7 @@ class Hero < Entity
   def initialize(opts = {})
     @xp = @gold = 0
 
-    default_weapon = Weapon.new({
+    opts[:default_weapon] = Weapon.new({
       name: "fists",
       damage: 1,
       price: 0
