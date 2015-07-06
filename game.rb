@@ -107,80 +107,69 @@ class Game
 
   def initialize
     @heroes = enlist_heroes
+    @chosen_heroes = []
+    @fighter = ''
   end
 
   def enlist_heroes
-    chosen_heros = []
+    @chosen_heroes = []
     puts "Which hero would you like to choose? (Choose 3, select one hero at a time, by number)"
-    until chosen_heros.length > 2
+    # until @@chosen_heroes.length > 1
+    2.times do
     HEROS.each_with_index {|val, index| puts "#{val.name} press #{index}"}
     # Display choices for heroes
     # Prompt (gets) the user for choices e.g. 2, 6
-    print "Choose Hero #{chosen_heros.length + 1} > "
+    print "\nChoose Hero #{@chosen_heroes.length + 1}\n > "
     choice = gets.chomp.to_i
-    chosen_heros << HEROS[choice]
+    @chosen_heroes << HEROS[choice]
     HEROS.delete_at(choice)
     # Create a party with those heroes in it and return it
     end
     puts "The Game has begun!"
-    chosen_heros
+    path
   end
 
-  def enter_forest
-
-  end
-
-  def enter_shop
-
-  end
-
-  def town_message
-    puts <<-PLAY_MESSAGE
-    Your heroes are ready for action,
-    should they...
-    1. Enter the forest?
-    2. Go shopping for wares?
-    PLAY_MESSAGE
-  end
-
-  def get_location
-    resp = gets.chomp
-
-    if resp == "1"
-      return :forest
-    else
-      return :shop
-    end
-  end
-
-  def play
-    town_message
-    case get_location
-    when :forest
+  def path
+    puts "\nEnter 1 to go to The Forest or 2 to go to The Shop"
+    destination = gets.chomp.to_i
+    if destination == 1
       enter_forest
-    when :shop
+    else
       enter_shop
     end
   end
+
+  def enter_forest
+    puts "You've encountered a group of Monsters who would like to do battle."
+    puts "Which hero would you like fight?"
+    @chosen_heroes.each_with_index {|val, index| puts "#{val.name} press #{index}"}
+    @fighter = gets.chomp.to_i
+    fight
+  end
+
+  def enter_shop
+    puts "Hello shop"
+  end
+
+def fight
+  monster_fighter = MONSTERS.shuffle.pop
+  current_fighters = [@fighter, monster_fighter]
+  attacker = current_fighters.shift
+  attackee = current_fighters.shift
+
+  while attackee.is_alive?
+    attacker.attack(attackee)
+
+    puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
+
+    attacker, attackee = attackee, attacker unless attackee.is_dead?
+  end
+
+  puts "#{attackee} is now dead..."
+
+end
 end
 
 Game.new
-
-
-
-# current_fighters = [artemis, goblin]
-# attacker = current_fighters.shift
-# attackee = current_fighters.shift
-#
-# while attackee.is_alive?
-#   attacker.attack(attackee)
-#
-#   puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
-#
-#   attacker, attackee = attackee, attacker unless attackee.is_dead?
-# end
-#
-# puts "#{attackee} is now dead..."
-
 
 binding.pry
