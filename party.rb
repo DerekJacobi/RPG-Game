@@ -21,10 +21,13 @@ end
 class HeroParty < Party
   def attack(opposing_party)
     # sending message to user, asking which monster to attack
+    puts "What Goblin do you want to attack? Press 0 for #{opposing_party[0].name} , press 1 for #{opposing_party[1].name}, press 2 for #{opposing_party[2].name}"
+    goblin = gets.chomp
+    hero.attack(opposing_party[goblin])
   end
 end
 
-class MonsterParty < Part
+class MonsterParty < Party
   def attack(opposing_party)
     # randomly choose a member of the opposing_party and attack it
   end
