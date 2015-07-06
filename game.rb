@@ -126,7 +126,6 @@ class Game
     # Create a party with those heroes in it and return it
     end
     puts "The Game has begun!"
-    path
   end
 
   def path
