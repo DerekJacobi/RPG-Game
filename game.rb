@@ -113,8 +113,7 @@ class Game
 
   def enlist_heroes
     @chosen_heroes = []
-    puts "Which hero would you like to choose? (Choose 3, select one hero at a time, by number)".blue
-    # until @@chosen_heroes.length > 1
+    puts "Which hero would you like to choose? (Choose two, select one hero at a time, by number)".blue
     2.times do
     HEROS.each_with_index {|val, index| puts "#{val.name} press #{index}".red}
     # Display choices for heroes
@@ -134,15 +133,26 @@ class Game
   def path
     puts "\nEnter 1 to go to The Forest or 2 to go to The Shop"
     destination = gets.chomp.to_i
-    enter_forest if destination == 1
-    enter_shop if destination == 2
+    if destination == 1
+      enter_forest
+    elsif destination == 2
+      enter_shop
+    else
+      puts "Invalid Selection, Please choose 1 or 2"
+      path
+    end
   end
 
   def enter_forest
+    puts "You've encountered a group of Monsters who would like to do battle."
+    battle
+  end
+
+  def battle
     if MONSTERS.any?
-      puts "You've encountered a group of Monsters who would like to do battle."
-      puts "Which hero would you like fight?"
-      @chosen_heroes.each_with_index {|val, index| puts "#{val.name}".green + " press #{index}"}
+      puts "Which hero would you like to fight for you?"
+      puts "There are #{MONSTERS.length} monster(s) remaining"
+      @chosen_heroes.each_with_index {|val, index| puts "To choose: " + "#{val}".green + ", press #{index}. " + "(#{val.current_hp} HP Remaining)" }
       @fighter = @chosen_heroes[gets.chomp.to_i]
       fight
     else
@@ -152,7 +162,25 @@ class Game
   end
 
   def enter_shop
-    puts "Hello shop"
+    puts "Welcome to the shop!, What can we help you find today?"
+    puts "|+++++++++++++| |+++++++++++++|"
+    puts "|[Weapons](1) | | [Armor](2)  |"
+    puts "|+++++++++++++| |+++++++++++++|"
+    shop_choice = gets.chomp.to_i
+    case shop_choice
+      when 1
+      weapons_shop
+      when 2
+      armor_shop
+    end
+    path
+  end
+
+  def weapons_shop
+    puts "Weapons Selection".blue
+  end
+
+  def armor_shop
   end
 
   def fight
@@ -166,7 +194,7 @@ class Game
       attacker, attackee = attackee, attacker unless attackee.is_dead?
     end
     puts "#{attackee} is now dead..."
-    enter_forest if MONSTERS.any?
+    battle if MONSTERS.any?
     path if MONSTERS.none?
   end
 end
