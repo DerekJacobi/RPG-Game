@@ -9,7 +9,7 @@ class Game
 
   HEROS = [
   lancelot = Hero.new({
-    name: "lancelot",
+    name: "Lancelot",
     hp: 20,
     weapon: Weapon.new({
       name: "longbow",
@@ -18,10 +18,10 @@ class Game
     })
   }),
   link = Hero.new({
-    name: "link",
+    name: "Link",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "Bow",
       damage: 6,
       price: 25
     })
@@ -30,7 +30,7 @@ class Game
     name: "Luke Skywalker",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "LightSaber",
       damage: 6,
       price: 25
     })
@@ -39,7 +39,7 @@ class Game
     name: "Tony Stark",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "Mark V Suit",
       damage: 6,
       price: 25
     })
@@ -48,7 +48,7 @@ class Game
     name: "Antman",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "Ants",
       damage: 6,
       price: 25
     })
@@ -57,7 +57,7 @@ class Game
     name: "Michael Jordan",
     hp: 20,
     weapon: Weapon.new({
-      name: "longbow",
+      name: "basketballs",
       damage: 6,
       price: 25
     })
@@ -107,81 +107,107 @@ class Game
 
   def initialize
     @heroes = enlist_heroes
+    @chosen_heroes = []
+    @fighter = ''
   end
 
   def enlist_heroes
-    chosen_heros = []
-    puts "Which hero would you like to choose? (Choose 3, select one hero at a time, by number)"
-    until chosen_heros.length > 2
-    HEROS.each_with_index {|val, index| puts "#{val.name} press #{index}"}
+    @chosen_heroes = []
+    puts "Which hero would you like to choose? (Choose two, select one hero at a time, by number)".blue
+    2.times do
+    HEROS.each_with_index {|val, index| puts "#{val.name} press #{index}".red}
     # Display choices for heroes
     # Prompt (gets) the user for choices e.g. 2, 6
-    print "Choose Hero #{chosen_heros.length + 1} > "
+    print "\nChoose Hero #{@chosen_heroes.length + 1}\n > "
     choice = gets.chomp.to_i
-    chosen_heros << HEROS[choice]
+    @chosen_heroes << HEROS[choice]
     HEROS.delete_at(choice)
     # Create a party with those heroes in it and return it
     end
     puts "The Game has begun!"
-    
-    chosen_heros
+    puts "Your heroes are: "
+    @chosen_heroes.each {|hero| puts hero.name.green}
+    binding.pry
+    path
+  end
+
+  def path
+    puts "\nEnter 1 to go to The Forest or 2 to go to The Shop"
+    destination = gets.chomp.to_i
+    if destination == 1
+      enter_forest
+    elsif destination == 2
+      enter_shop
+    else
+      puts "Invalid Selection, Please choose 1 or 2"
+      path
+    end
   end
 
   def enter_forest
+    puts "You've encountered a group of Monsters who would like to do battle."
+    battle
+  end
 
+  def battle
+    if MONSTERS.any?
+      puts "Which hero would you like to fight for you?"
+      puts "There are #{MONSTERS.length} monster(s) remaining"
+      @chosen_heroes.each_with_index {|val, index| puts "To choose: " + "#{val}".green + ", press #{index}. " + "(#{val.current_hp} HP Remaining)" }
+      @fighter = @chosen_heroes[gets.chomp.to_i]
+      fight
+    else
+      puts "There are currently no more monsters in these woods, please come back later"
+      path
+    end
   end
 
   def enter_shop
-
+    puts "Welcome to the shop!, What can we help you find today?"
+    puts "|+++++++++++++| |+++++++++++++|"
+    puts "|[Weapons](1) | | [Armor](2)  |"
+    puts "|+++++++++++++| |+++++++++++++|"
+    shop_choice = gets.chomp.to_i
+    case shop_choice
+      when 1
+      weapons_shop
+      when 2
+      armor_shop
+    end
+    path
   end
 
-  def town_message
-    puts <<-PLAY_MESSAGE
-    Your heroes are ready for action,
-    should they...
-    1. Enter the forest?
-    2. Go shopping for wares?
-    PLAY_MESSAGE
+  def weapons_shop
+    puts "Weapons Selection".blue
   end
 
-  def get_location
-    resp = gets.chomp
+  def armor_shop
+  end
 
-    if resp == "1"
-      return :forest
-    else
-      return :shop
+
+    def fight
+      monster_fighter = MONSTERS.pop
+      current_fighters = [@fighter, monster_fighter]
+      attacker = current_fighters.shift
+      attackee = current_fighters.shift
+      while attackee.is_alive?
+        attacker.attack(attackee)
+        puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
+        attacker, attackee = attackee, attacker unless attackee.is_dead?
+      end
+      puts "#{attackee} is now dead..."
+      if attackee == monster_fighter
+        attacker.xp += attackee.xp
+        attacker.gold += attackee.gold
+        puts "#{attacker} now has #{attacker.xp} XP"
+        puts "#{attacker} now has #{attacker.gold} gold"
+      end
+    
+      battle if MONSTERS.any?
+      path if MONSTERS.none?
     end
   end
-
-  def play
-    town_message
-    case get_location
-    when :forest
-      enter_forest
-    when :shop
-      enter_shop
-    end
-  end
-end
 
 Game.new
-
-
-
-# current_fighters = [artemis, goblin]
-# attacker = current_fighters.shift
-# attackee = current_fighters.shift
-#
-# while attackee.is_alive?
-#   attacker.attack(attackee)
-#
-#   puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
-#
-#   attacker, attackee = attackee, attacker unless attackee.is_dead?
-# end
-#
-# puts "#{attackee} is now dead..."
-
 
 binding.pry
