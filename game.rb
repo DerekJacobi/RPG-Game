@@ -127,6 +127,7 @@ class Game
     puts "The Game has begun!"
     puts "Your heroes are: "
     @chosen_heroes.each {|hero| puts hero.name.green}
+    binding.pry
     path
   end
 

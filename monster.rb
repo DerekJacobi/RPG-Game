@@ -1,6 +1,8 @@
 require_relative 'entity'
 
 class Monster < Entity
+  attr_accessor :xp, :gold
+
   def initialize(opts = {})
     @xp = opts[:xp] || 1
     @gold = opts[:gold] || 10
