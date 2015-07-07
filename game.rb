@@ -4,6 +4,7 @@ require 'pry'
 require_relative 'hero'
 require_relative 'monster'
 require_relative 'party'
+require_relative 'shop'
 
 MONSTERS = [
   goblin = Monster.new({
@@ -45,7 +46,6 @@ shrek = Monster.new({
 ]
 
 class Game
-
   HEROS = [
   lancelot = Hero.new({
     name: "Lancelot",
@@ -126,7 +126,6 @@ class Game
     puts "The Game has begun!"
     puts "Your heroes are: "
     @chosen_heroes.each {|hero| puts hero.name.green}
-    binding.pry
     path
   end
 
@@ -166,6 +165,10 @@ class Game
 
   def weapons_shop
     puts "Weapons Selection".blue
+    puts "Which hero would you like to peruse Weapons for?"
+    @chosen_heroes.each_with_index {|val, index| puts "To choose: " + "#{val}".green + ", press #{index}. "}
+    fighter = @chosen_heroes[gets.chomp.to_i]
+    browse
   end
 
   def armor_shop
