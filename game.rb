@@ -5,6 +5,45 @@ require_relative 'hero'
 require_relative 'monster'
 require_relative 'party'
 
+MONSTERS = [
+  goblin = Monster.new({
+  name: "Goblin, father of 7",
+  hp: 9,
+  weapon: Weapon.new({
+    name: "his wife's rusty last kitchen knife",
+    damage: 1,
+    price: 1
+  }),
+  xp: 2,
+  gold: 1
+}),
+
+ghost = Monster.new({
+  name: "Casper",
+  hp: 6,
+  weapon: Weapon.new({
+    name: "his wife's rusty last kitchen knife",
+    damage: 1,
+    price: 1
+  }),
+  xp: 2,
+  gold: 1
+}),
+
+shrek = Monster.new({
+  name: "Ogre",
+  hp: 11,
+  weapon: Weapon.new({
+    name: "onions",
+    damage: 2,
+    price: 1
+  }),
+  xp: 3,
+  gold: 1
+}),
+
+]
+
 class Game
 
   HEROS = [
@@ -65,46 +104,6 @@ class Game
 
 ]
 
-  MONSTERS = [
-    goblin = Monster.new({
-    name: "Goblin, father of 7",
-    hp: 9,
-    weapon: Weapon.new({
-      name: "his wife's rusty last kitchen knife",
-      damage: 1,
-      price: 1
-    }),
-    xp: 2,
-    gold: 1
-  }),
-
-  ghost = Monster.new({
-    name: "Casper",
-    hp: 6,
-    weapon: Weapon.new({
-      name: "his wife's rusty last kitchen knife",
-      damage: 1,
-      price: 1
-    }),
-    xp: 2,
-    gold: 1
-  }),
-
-  shrek = Monster.new({
-    name: "Ogre",
-    hp: 11,
-    weapon: Weapon.new({
-      name: "onions",
-      damage: 2,
-      price: 1
-    }),
-    xp: 3,
-    gold: 1
-  }),
-
-  ]
-
-
   def initialize
     @heroes = enlist_heroes
     @chosen_heroes = []
@@ -146,9 +145,6 @@ class Game
 
   def enter_forest
       puts "You've encountered a group of Monsters who would like to do battle."
-      puts "Which hero would you like to fight for you?"
-      @chosen_heroes.each_with_index {|val, index| puts "To choose: " + "#{val}".green + ", press #{index}. " + "(#{val.current_hp} HP Remaining)" }
-      @fighter = @chosen_heroes[gets.chomp.to_i]
       fight
       path
   end
@@ -178,6 +174,10 @@ class Game
 
   def fight
     number_of_monsters = rand(1..3)
+    puts "There are #{number_of_monsters} monsters!"
+    puts "Which hero would you like to fight for you?"
+    @chosen_heroes.each_with_index {|val, index| puts "To choose: " + "#{val}".green + ", press #{index}. " + "(#{val.current_hp} HP Remaining)" }
+    @fighter = @chosen_heroes[gets.chomp.to_i]
     number_of_monsters.times do
     monster_fighter = MONSTERS.sample
     current_fighters = [@fighter, monster_fighter]
