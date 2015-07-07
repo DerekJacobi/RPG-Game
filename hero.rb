@@ -1,5 +1,7 @@
 require_relative 'entity'
 class Hero < Entity
+  attr_accessor :xp, :gold
+
   def initialize(opts = {})
     @xp = @gold = 0
 

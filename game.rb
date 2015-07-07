@@ -183,21 +183,29 @@ class Game
   def armor_shop
   end
 
-  def fight
-    monster_fighter = MONSTERS.pop
-    current_fighters = [@fighter, monster_fighter]
-    attacker = current_fighters.shift
-    attackee = current_fighters.shift
-    while attackee.is_alive?
-      attacker.attack(attackee)
-      puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
-      attacker, attackee = attackee, attacker unless attackee.is_dead?
+
+    def fight
+      monster_fighter = MONSTERS.pop
+      current_fighters = [@fighter, monster_fighter]
+      attacker = current_fighters.shift
+      attackee = current_fighters.shift
+      while attackee.is_alive?
+        attacker.attack(attackee)
+        puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
+        attacker, attackee = attackee, attacker unless attackee.is_dead?
+      end
+      puts "#{attackee} is now dead..."
+      if attackee == monster_fighter
+        attacker.xp += attackee.xp
+        attacker.gold += attackee.gold
+        puts "#{attacker} now has #{attacker.xp} XP"
+        puts "#{attacker} now has #{attacker.gold} gold"
+      end
+    
+      battle if MONSTERS.any?
+      path if MONSTERS.none?
     end
-    puts "#{attackee} is now dead..."
-    battle if MONSTERS.any?
-    path if MONSTERS.none?
   end
-end
 
 Game.new
 
