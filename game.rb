@@ -145,21 +145,12 @@ class Game
   end
 
   def enter_forest
-    puts "You've encountered a group of Monsters who would like to do battle."
-    battle
-  end
-
-  def battle
-    if MONSTERS.any?
+      puts "You've encountered a group of Monsters who would like to do battle."
       puts "Which hero would you like to fight for you?"
-      puts "There are #{MONSTERS.length} monster(s) remaining"
       @chosen_heroes.each_with_index {|val, index| puts "To choose: " + "#{val}".green + ", press #{index}. " + "(#{val.current_hp} HP Remaining)" }
       @fighter = @chosen_heroes[gets.chomp.to_i]
       fight
-    else
-      puts "There are currently no more monsters in these woods, please come back later"
       path
-    end
   end
 
   def enter_shop
@@ -182,31 +173,32 @@ class Game
   end
 
   def armor_shop
+    puts "Armor Selection".blue
   end
 
-
-    def fight
-      monster_fighter = MONSTERS.pop
-      current_fighters = [@fighter, monster_fighter]
-      attacker = current_fighters.shift
-      attackee = current_fighters.shift
-      while attackee.is_alive?
-        attacker.attack(attackee)
-        puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
-        attacker, attackee = attackee, attacker unless attackee.is_dead?
-      end
-      puts "#{attackee} is now dead..."
-      if attackee == monster_fighter
-        attacker.xp += attackee.xp
-        attacker.gold += attackee.gold
-        puts "#{attacker} now has #{attacker.xp} XP"
-        puts "#{attacker} now has #{attacker.gold} gold"
-      end
-    
-      battle if MONSTERS.any?
-      path if MONSTERS.none?
+  def fight
+    number_of_monsters = rand(1..3)
+    number_of_monsters.times do
+    monster_fighter = MONSTERS.sample
+    current_fighters = [@fighter, monster_fighter]
+    attacker = current_fighters.shift
+    attackee = current_fighters.shift
+    while attackee.is_alive?
+      attacker.attack(attackee)
+      puts "#{attacker} attacks #{attackee} with his #{attacker.weapon} for #{attacker.weapon.damage}.  #{attackee} now has #{attackee.current_hp} HP left."
+      attacker, attackee = attackee, attacker unless attackee.is_dead?
+    end
+    puts "#{attackee} is now dead..."
+    if attackee == monster_fighter
+      attacker.xp += attackee.xp
+      attacker.gold += attackee.gold
+      puts "#{attacker} now has #{attacker.xp} XP"
+      puts "#{attacker} now has #{attacker.gold} gold"
+    end
     end
   end
+
+end
 
 Game.new
 
